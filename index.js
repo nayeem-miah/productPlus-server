@@ -18,9 +18,9 @@ app.use(express.json());
 
 
 
-console.log(process.env.DB_pass);
+console.log(process.env.DB_user);
 
-const uri = `mongodb+srv://${process.envDB_user}:${process.env.DB_pass}@cluster0.bomlehy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const uri = `mongodb+srv://${process.env.DB_user}:${process.env.DB_pass}@cluster0.bomlehy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 const client = new MongoClient(uri, {
     serverApi: {
         version: ServerApiVersion.v1,
@@ -34,6 +34,17 @@ async function run() {
         // await client.connect();
         const productCollection = client.db("productPlus").collection('product')
        
+
+        app.get('/products', async (req, res) => {
+            const cursor = productCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        });
+        // app.get('/reviews', async (req, res) => {
+        //     const cursor = reviewsCollection.find();
+        //     const result = await cursor.toArray();
+        //     res.send(result);
+        // });
 
         // await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
