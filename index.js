@@ -9,6 +9,8 @@ app.use(
     cors({
         origin: [
             "http://localhost:5173",
+            "https://productplus-1.web.app/",
+            "https://productplus-1.firebaseapp.com/"
         ],
         credentials: true,
     })
@@ -32,7 +34,7 @@ async function run() {
     try {
         // await client.connect();
         const productCollection = client.db("productPlus").collection('product')
-        const reviewsCollection = client.db("productPlus").collection('reviews')
+
 
         app.get('/productRange', async (req, res) => {
             let query = {}
@@ -98,12 +100,8 @@ async function run() {
             res.send({ count });
         })
 
-        
-        app.get('/reviews', async (req, res) => {
-            const cursor = reviewsCollection.find();
-            const result = await cursor.toArray();
-            res.send(result);
-        });
+
+       
 
         // await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
