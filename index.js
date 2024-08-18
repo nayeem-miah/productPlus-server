@@ -19,9 +19,6 @@ app.use(
 app.use(express.json());
 
 
-
-console.log(process.env.DB_user);
-
 const uri = `mongodb+srv://${process.env.DB_user}:${process.env.DB_pass}@cluster0.bomlehy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 const client = new MongoClient(uri, {
     serverApi: {
@@ -39,11 +36,19 @@ async function run() {
         const addedCollection = client.db("productPlus").collection('addProduct')
 
         app.get('/productRange', async (req, res) => {
-            let query = {}
-            if (req.query?.range) {
-                query = { range: req.query.range }
+            let filter = req.query;
+            // console.log(filter);
+            const query = {};
+            const options={
+                sort:{
+                    price: filter.sort === 'asc'? 1: -1
+                }
+
             }
-            const result = await productCollection.find(query).toArray();
+            // if (req.query?.range) {
+            //     query = { range: req.query.range }
+            // }
+            const result = await productCollection.find(query,options).toArray();
             res.send(result)
         });
 
