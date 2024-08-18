@@ -9,9 +9,9 @@ app.use(
     cors({
         origin: [
             "http://localhost:5173",
-            "http://localhost:5174/",
-            "https://productplus-1.web.app/",
-            "https://productplus-1.firebaseapp.com/",
+            "http://localhost:5174",
+            "https://productplus-1.web.app",
+            "https://productplus-1.firebaseapp.com",
         ],
         credentials: true,
     })
@@ -73,7 +73,6 @@ async function run() {
             const result = await productCollection.find(query).toArray();
             res.send(result)
         });
-
         app.get('/products', async (req, res) => {
             const page = parseInt(req.query.page);
             const size = parseInt(req.query.size);
@@ -102,6 +101,7 @@ async function run() {
             res.send({ count });
         })
 
+        // additional add product
         app.post('/addProduct', async (req, res) => {
             const newProduct = req.body;
             const result = await addedCollection.insertOne(newProduct);
