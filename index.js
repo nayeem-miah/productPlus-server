@@ -9,8 +9,9 @@ app.use(
     cors({
         origin: [
             "http://localhost:5173",
+            "http://localhost:5174/",
             "https://productplus-1.web.app/",
-            "https://productplus-1.firebaseapp.com/"
+            "https://productplus-1.firebaseapp.com/",
         ],
         credentials: true,
     })
@@ -35,6 +36,7 @@ async function run() {
         // await client.connect();
         const productCollection = client.db("productPlus").collection('product')
 
+        const addedCollection = client.db("productPlus").collection('addProduct')
 
         app.get('/productRange', async (req, res) => {
             let query = {}
@@ -100,8 +102,28 @@ async function run() {
             res.send({ count });
         })
 
+        app.post('/addProduct', async (req, res) => {
+            const newProduct = req.body;
+            const result = await addedCollection.insertOne(newProduct);
+            res.send(result);
+        })
 
-       
+        app.get("/addProduct/:email", async (req, res) => {
+            const email = req.params.email;
+            const query = { "user.email": email };
+            const result = await addedCollection.find(query).toArray();
+            res.send(result);
+        });
+        // delete
+        app.delete("/deleteProduct/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await addedCollection.deleteOne(query);
+            res.send(result);
+        });
+
+
+
 
         // await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
@@ -115,7 +137,7 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('productPlus-Backend')
+    res.send('productPlus-Backend...')
 });
 
 app.listen(port, () => {
