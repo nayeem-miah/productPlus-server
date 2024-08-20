@@ -6,15 +6,7 @@ const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 app.use(
-    cors({
-        origin: [
-            "http://localhost:5173",
-            "http://localhost:5174",
-            "https://productplus-1.web.app",
-            "https://productplus-1.firebaseapp.com",
-        ],
-        credentials: true,
-    })
+    cors()
 );
 app.use(express.json());
 
@@ -39,16 +31,16 @@ async function run() {
             let filter = req.query;
             // console.log(filter);
             const query = {};
-            const options={
-                sort:{
-                    price: filter.sort === 'asc'? 1: -1
+            const options = {
+                sort: {
+                    price: filter.sort === 'asc' ? 1 : -1
                 }
 
             }
             // if (req.query?.range) {
             //     query = { range: req.query.range }
             // }
-            const result = await productCollection.find(query,options).toArray();
+            const result = await productCollection.find(query, options).toArray();
             res.send(result)
         });
 
